@@ -1,0 +1,51 @@
+   <LinearLayout
+       
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="1"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="freeness"
+        android:textSize="32dip" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal">
+        
+        <Button
+            android:id="@+id/btn_gotoWebsite"
+            android:layout_width="160dp"
+            android:layout_height="fill_parent"
+            android:text="freeness.de" />
+       
+        <Button
+            android:id="@+id/btn_powerProgramm"
+            android:layout_width="match_parent"
+            android:layout_height="238dp"
+            android:layout_gravity="start"
+            android:text="15min Power-Programm" />
+        
+    </LinearLayout>
+        <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:orientation="horizontal">
+       
+
+        
+
+
+        <Button
+            android:id="@+id/btn_trainer"
+            android:layout_width="match_parent"
+            android:layout_height="112dp"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:text="AR Trainer" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+           
+           android:paddingTop="0dip" android:layout_gravity="top"
+         >
+        <TableRow>
+            <LinearLayout
+                  android:layout_width="95dp"
+                  android:layout_height="95dp"
+                  android:paddingLeft="5dp"
+                  android:paddingTop="5dp"
+                  android:paddingBottom="5dp"
+                  >
+              <ImageView
+                  android:layout_height="fill_parent"
+                  android:layout_width="fill_parent"
+                  android:layout_gravity="left|top" 
+                  android:scaleType="center"
+                  android:background="@drawable/ic_launcher"
+                  android:id="@+id/image"
+                   
+                  />
+              </LinearLayout>
+  <TableLayout
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:paddingTop="0dip" android:layout_gravity="top"
+            >
+            <TableRow>
+                <LinearLayout 
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:orientation="horizontal">
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Entfernung: "
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginTop="4dip"
+                    android:textColor="#000000"
+                    android:layout_span="1"
+                    />  
+               <TextView
+                    android:id="@+id/text"
+
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+					
+                    android:textSize="16sp"
+
+                    android:layout_marginTop="4dip"
+                    android:textColor="#000000"
+                    android:layout_span="1"
+                    />
+               
+               </LinearLayout>    
+              </TableRow>
+              <TableRow>   
+                  <LinearLayout 
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:orientation="horizontal">
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Name: "
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginTop="4dip"
+                    android:textColor="#000000"
+                    android:layout_span="1"
+                    />        
+                 <TextView
+                    android:text=""
+                    android:id="@+id/text1"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="left|center_vertical"
+                    android:textSize="16sp"
+                    android:textColor="#000000"
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginTop="4dip"
+                    android:gravity="left"/>
+                 </LinearLayout>
+              </TableRow>
+              
+              <TableRow>
+                  <LinearLayout 
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:orientation="horizontal">
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Level: "
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginTop="4dip"
+                    android:textColor="#000000"
+                    android:layout_span="1"
+                    />           
+                 <TextView
+                    android:text=""
+                    android:id="@+id/text2"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="left|center_vertical"
+                    android:textSize="16sp"
+                    android:textColor="#000000"
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginTop="4dip"
+                    android:gravity="left"/>
+                 </LinearLayout>
+              </TableRow>
+            </TableLayout>
+       </TableRow>
+</TableLayout>
