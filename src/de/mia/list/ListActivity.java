@@ -35,12 +35,14 @@ public class ListActivity extends Activity {
 	 Button insidePopupButton;
 	 Button toGoogleMaps;
 	 TextView popupText;
+	 
 	
 	 ListView list;
      CustomAdapter adapter;
      public  ListActivity CustomListView = null;
      public  ArrayList<ListModel> ListViewValuesArr = new ArrayList<ListModel>();
-      
+     
+     String name = "";
      @Override
      protected void onCreate(Bundle savedInstanceState) {
 
@@ -76,7 +78,7 @@ public class ListActivity extends Activity {
  					HttpGet request = new HttpGet(
  							"http://freenessspot.appspot.com/freenessspot");
 
- 					HttpResponse response = null;
+ 					HttpResponse response = client.execute(request);
  					try {
  						response = client.execute(request);
  						Log.w("info", "request: " + request);
@@ -92,6 +94,17 @@ public class ListActivity extends Activity {
  					try {
  						InputStreamReader reader = new InputStreamReader(entity
  								.getContent(), "utf8");
+ 						
+ 						int  c = reader.read();
+ 						while(c>0){
+ 							name += (char) c;
+ 							c = reader.read();
+ 							
+ 							String result = name.substring(name.lastIndexOf(":")+1); 
+ 							Log.w("info", "Result: " + result);
+ 							Log.w("info", "name: " + name);
+ 						}
+ 						
  					} catch (UnsupportedEncodingException e) {
  						// TODO Auto-generated catch block
  						e.printStackTrace();
@@ -102,6 +115,7 @@ public class ListActivity extends Activity {
  						// TODO Auto-generated catch block
  						e.printStackTrace();
  					}
+ 					client.close();
 
  				} catch (Exception e) {
  					e.printStackTrace();
@@ -115,15 +129,13 @@ public class ListActivity extends Activity {
      /****** Function to set data in ArrayList *************/
      public void setListData()
      {
-          
+    	 
          for (int i = 1; i < 10; i++) {
-              
-             final ListModel sched = new ListModel();
-                  
+                 final ListModel sched = new ListModel();
                /******* Firstly take data in model object ******/
                 sched.setEntfernung(""+i+""+i+""+i+"m");
                 sched.setImage("pic"+i);
-                sched.setName("Kuechenmagnet");
+                sched.setName("kuechenmagnet");
                 sched.setLevel(""+i);
                  
              /******** Take Model Object in ArrayList **********/
