@@ -7,6 +7,10 @@ import java.util.ArrayList;
 
 
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -16,6 +20,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.text.TextUtils.SimpleStringSplitter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -35,7 +40,9 @@ public class ListActivity extends Activity {
 	 Button insidePopupButton;
 	 Button toGoogleMaps;
 	 TextView popupText;
-	
+	 String data;
+	 int dataChar = 0;
+	 
 	 ListView list;
      CustomAdapter adapter;
      public  ListActivity CustomListView = null;
@@ -43,19 +50,12 @@ public class ListActivity extends Activity {
       
      @Override
      protected void onCreate(Bundle savedInstanceState) {
-
-
+    	 
          super.onCreate(savedInstanceState);
          setContentView(R.layout.activity_list);
-          
          CustomListView = this;
           
-         getDataFromDataStore();
-         
-         
          /******** Take some data in Arraylist ( CustomListViewValuesArr ) ***********/
-         setListData();
-          
          Resources res =getResources();
          list= ( ListView )findViewById( R.id.list );  // List defined in XML ( See Below )
           
@@ -63,10 +63,21 @@ public class ListActivity extends Activity {
          adapter=new CustomAdapter( CustomListView, ListViewValuesArr,res );
          list.setAdapter( adapter );
          
-         initPopUp();
+         //initPopUp(); 
+         getDataFromDataStore();
      }
      
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Log.w("ele","onResume setDataList");
+		setListData();
+		//sortListViewEntfernung();
+	}
+     
      public void getDataFromDataStore() {
+    	 
     	 Thread thread = new Thread(new Runnable() {
  			@Override
  			public void run() {
@@ -79,19 +90,19 @@ public class ListActivity extends Activity {
  					HttpResponse response = null;
  					try {
  						response = client.execute(request);
- 						Log.w("info", "request: " + request);
- 						Log.w("info", "response: " + response);
  					} catch (IOException e) {
  						// TODO Auto-generated catch block
  						e.printStackTrace();
  					}
 
  					HttpEntity entity = response.getEntity();
- 					Log.w("info", "entity: " + entity);
-
  					try {
- 						InputStreamReader reader = new InputStreamReader(entity
- 								.getContent(), "utf8");
+ 						InputStreamReader reader = new InputStreamReader(entity.getContent(), "utf8");
+ 						dataChar = reader.read();
+ 						while(dataChar > 0) {
+ 							data += (char)dataChar;
+ 							dataChar = reader.read();
+ 						}
  					} catch (UnsupportedEncodingException e) {
  						// TODO Auto-generated catch block
  						e.printStackTrace();
@@ -102,43 +113,100 @@ public class ListActivity extends Activity {
  						// TODO Auto-generated catch block
  						e.printStackTrace();
  					}
+ 					client.close();
 
  				} catch (Exception e) {
  					e.printStackTrace();
  				}
  			}
  		});
-
  		thread.start();
+ 		try {
+			thread.join();
+			Log.w("ele",data);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
      }
   
      /****** Function to set data in ArrayList *************/
      public void setListData()
-     {
-          
-         for (int i = 1; i < 10; i++) {
-              
-             final ListModel sched = new ListModel();
-                  
-               /******* Firstly take data in model object ******/
-                sched.setEntfernung(""+i+""+i+""+i+"m");
-                sched.setImage("pic"+i);
-                sched.setName("Kuechenmagnet");
-                sched.setLevel(""+i);
-                 
-             /******** Take Model Object in ArrayList **********/
-                ListViewValuesArr.add( sched );
-         }
-          
-     }
+     {        
+             SimpleStringSplitter sssn = new SimpleStringSplitter('\n');
+             SimpleStringSplitter sss = new SimpleStringSplitter(':');
+             int i = 0;
+             //Log.w("ele",data);
+             if(data == null){
+            	 Log.w("ele","Data ist leer");
+             }
+             else {
+            	 sssn.setString(data);
+             
+            	 while(sssn.hasNext()) {
+            		 final ListModel model = new ListModel();
+            		 i++;
+				
+            		 sss.setString( sssn.next() );
+            		
+            		 model.setName(sss.next());
+            		
+            		 model.setLon(sss.next());
+            		
+            		 model.setLat(sss.next());
+            		
+            		 model.setEntfernung(sss.next());
+            		
+            		 model.setLevel(sss.next());
+            		
+            		 sssn.next();
+            		 model.setImage("pic"+i);
+            		 ListViewValuesArr.add( model );
+            	 }
+			}    
+     }  
+
+     /********* Function to sort the string-value from "Entfernung" ******/
+     public void sortListViewEntfernung() {
+    	 
+ 		Comparator<ListModel> c = new Comparator<ListModel>() {        //comparator sagt ob die Werte in der Liste noch gedreht werden m�ssen oder nicht
+ 			@Override
+ 		/******** Function that compares two objects ******/
+ 			public int compare(ListModel o1, ListModel o2) {			 //vergleicht objekte aus listmodel
+ 				return o1.compareToEntfernung(o2);						//comparatar ruft jeweileigen listmodel auf und vergleicht 1 Objekt mit einem 2 Objekt und gibt das verh�ltnis mit in dem Wert zur�ck
+ 			}
+ 		};
+ 		Collections.sort(ListViewValuesArr, c);		//statische methode verlangt arrayliste
+ 		Log.w("ele","Sorting");
+ 		adapter.notifyDataSetChanged(); 			//Updated die Daten der Listview
+ 	}
+
      
+ /******** Function to sort the string-value from "Level" ******/ 
+ 	public void sortListViewLevel() {
+ 		Comparator<ListModel> c = new Comparator<ListModel>() {		//comparator sagt ob die Werte in der jeweiligen Liste noch gedreht werden m�ssen oder nicht
+ 			@Override
+ 			public int compare(ListModel o1, ListModel o2) {		 //vergleicht objekte aus listmodel
+ 				return o1.compareToLevel(o2);						//comparatar ruft jeweileigen listmodel auf und vergleicht 1 Objekt mit einem 2 Objekt und gibt das verh�ltnis mit in dem Wert zur�ck
+ 			}
+ 		};
+	 		Collections.sort(ListViewValuesArr, c);	//statische methode verlangt arrayliste
+	 		adapter.notifyDataSetChanged();			//Updated die Daten der Listview
+ 	}
 
      /*****************  This function used by adapter ****************/
      public void onItemClick(int mPosition)
      {
-         ListModel tempValues = ( ListModel ) ListViewValuesArr.get(mPosition);
+         //ListModel tempValues = ( ListModel ) ListViewValuesArr.get(mPosition);
 
-         popUp();
+         //popUp();
+    	 Intent intent = new Intent(getApplicationContext(), FreenessMap.class);
+    	 ListModel tempModel = ( ListModel ) ListViewValuesArr.get(mPosition);
+    	 intent.putExtra("lat", tempModel.getLat());
+    	 intent.putExtra("lon", tempModel.getLon());
+    	 intent.putExtra("name", tempModel.getName());
+		 startActivity(intent);
+         
         // SHOW ALERT                 
         //Intent intent = new Intent(getApplicationContext(), PopUpDescription.class);
        /* intent.putExtra("Image", tempValues.getImage());
@@ -212,11 +280,9 @@ public class ListActivity extends Activity {
 
         // SHOW ALERT                 
         Intent intent = new Intent(getApplicationContext(), ListItemVideoActivity.class);
-        intent.putExtra("Image", tempValues.getImage());
-        intent.putExtra("Entfernung", tempValues.getEntfernung());
-        intent.putExtra("Name", tempValues.getName());
-        intent.putExtra("Level", tempValues.getLevel());
+        intent.putExtra("videoPath", mPosition+1);
 		startActivity(intent);
+		
 
      }
 

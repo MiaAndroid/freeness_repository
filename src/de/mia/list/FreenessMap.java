@@ -22,15 +22,21 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
 public class FreenessMap extends FragmentActivity implements RoutingListener,
 		OnMapClickListener, OnClickListener, OnMarkerClickListener {
-	static final LatLng LETTE = new LatLng(52.496088, 13.34179);
-	static final LatLng LETTE1 = new LatLng(52.489052, 13.328278);
-	static final LatLng ROLAND = new LatLng(53.054796, 8.737711);
+	static final LatLng LETTE = new LatLng(52.497, 13.340);
+	static final LatLng LETTE1 = new LatLng(52.497, 13.341);
+	/*
+	static final LatLng LETTE2 = new LatLng(52.497, 13.343);
+	static final LatLng LETTE3 = new LatLng(52.497, 13.342);*/
+	
+	LatLng lette; 
+	String name;
 
 	private GoogleMap mMap;
 	private Polyline currentPolyLine;
@@ -46,19 +52,44 @@ public class FreenessMap extends FragmentActivity implements RoutingListener,
 		mMap = supportmapfragment.getMap();
 		mMap.setMyLocationEnabled(true);
 		mMap.setOnMarkerClickListener(this);
+		
+		String str = getIntent().getStringExtra("lat");
+		String lat = str.replace(",",".");
+		lat = lat.substring(1);
+		
+		str = getIntent().getStringExtra("lon");
+		String lon = str.replace(",",".");
+		lon = lon.substring(1);
+		
+		name = getIntent().getStringExtra("name");
+		Log.w("ele",lat+":"+lon);
+		lette = new LatLng(Float.valueOf(lat), Float.valueOf(lon));
+		
 		initializePosition();
 		addMarker();
 
 	}
+	
+	
 
 	private void addMarker() {
-		mMap.addMarker(new MarkerOptions().position(LETTE)
-				.title("Freeness-Station").snippet("Uebung: Klimmzuege")
-				.icon(BitmapDescriptorFactory.fromAsset("icon.png")));/*
-		Marker rolandMarker = mMap.addMarker(new MarkerOptions()
-				.position(ROLAND).title("Freeness-Station")
+		mMap.addMarker(new MarkerOptions().position(lette)
+				.title("Freeness-Spot").snippet(name)
+				.icon(BitmapDescriptorFactory.fromAsset("icon.png")));
+		/*Marker letteMarker = mMap.addMarker(new MarkerOptions()
+				.position(LETTE1).title("Freeness-Station")
 				.snippet("Uebung: Klimmzuege")
 				.icon(BitmapDescriptorFactory.fromAsset("icon.png")));
+		Marker letteMarker1 = mMap.addMarker(new MarkerOptions()
+		.position(LETTE2).title("Freeness-Station")
+		.snippet("Uebung: Klimmzuege")
+		.icon(BitmapDescriptorFactory.fromAsset("icon.png")));
+		Marker letteMarker2 = mMap.addMarker(new MarkerOptions()
+		.position(LETTE3).title("Freeness-Station")
+		.snippet("Uebung: Klimmzuege")
+		.icon(BitmapDescriptorFactory.fromAsset("icon.png")));
+		
+		/*
 		Marker letteMarker1 = mMap.addMarker(new MarkerOptions()
 				.position(new LatLng(52.506609, 13.342698))
 				.title("Freeness-Station").snippet("Uebung: Klimmzuege")
@@ -120,9 +151,9 @@ public class FreenessMap extends FragmentActivity implements RoutingListener,
 
 	@Override
 	public void onClick(View v) {
-		System.out.println("click");
+		Log.w("ele","click");
 		LatLng start = LETTE;
-		LatLng end = ROLAND;
+		LatLng end = LETTE1;
 
 		Location location = mMap.getMyLocation();
 		System.out.println(location);
@@ -142,7 +173,7 @@ public class FreenessMap extends FragmentActivity implements RoutingListener,
 	public boolean onMarkerClick(Marker marker) {
 		System.out.println("markerClick");
 		LatLng start = LETTE;
-		LatLng end = ROLAND;
+		LatLng end = LETTE1;
 
 		Location location = mMap.getMyLocation();
 		if (location != null) {
